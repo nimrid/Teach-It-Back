@@ -22,3 +22,12 @@ button, a, input, select, textarea {
 * {
   box-sizing: border-box;
 }
+
+/* Safe area insets for mobile notch & home indicator */
+.pt-safe {
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+}
+
+.pb-safe {
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+}

@@ -3,7 +3,7 @@ import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import rateLimit from 'express-rate-limit'
-import { initDatabase, db } from './db'
+import { initDatabase } from './db'
 import { TreasuryIndexer, DEFAULT_CONFIG } from './indexer'
 import { ValidationUtils } from '@nimiq/utils/validation-utils'
 import { AddressBook } from '@nimiq/utils/address-book'
@@ -148,48 +148,21 @@ app.post('/api/explainers', submissionLimiter, async (req: Request, res: Respons
 })
 
 // 4. Leaderboard Endpoint
-app.get('/api/leaderboard', (_req: Request, res: Response) => {
-  const rows = db
-    .prepare(`
-      SELECT id, teacher_name, payout_address, total_backed_luna, backer_count
-      FROM explainers
-      ORDER BY total_backed_luna DESC
-    `)
-    .all() as Array<{
-    id: string
-    teacher_name: string
-    payout_address: string
-    total_backed_luna: number
-    backer_count: number
-  }>
-
-  const leaderboard = rows.map((r, index) => ({
-    ...r,
-    rank: index + 1,
-  }))
-
+app.get('/api/leaderboard', async (_req: Request, res: Response) => {
+  const leaderboard = await store.getLeaderboard()
   res.json({ leaderboard })
 })
 
 // 5. Treasury Status & Transactions
-app.get('/api/treasury', (_req: Request, res: Response) => {
-  const txCount = (db.prepare('SELECT COUNT(*) as c FROM transactions').get() as { c: number }).c
-  const totalLuna = (
-    db
-      .prepare('SELECT COALESCE(SUM(value_luna), 0) as s FROM transactions WHERE is_self_backed = 0')
-      .get() as { s: number }
-  ).s
-
-  const recentTxs = db
-    .prepare('SELECT * FROM transactions ORDER BY timestamp DESC LIMIT 20')
-    .all()
+app.get('/api/treasury', async (_req: Request, res: Response) => {
+  const summary = await store.getTreasurySummary()
 
   res.json({
     treasuryAddress: indexer.getTreasuryAddress(),
     rpcUrl: indexer.getRpcUrl(),
-    totalTransactions: txCount,
-    totalIndexedLuna: totalLuna,
-    recentTransactions: recentTxs,
+    totalTransactions: summary.totalTransactions,
+    totalIndexedLuna: summary.totalIndexedLuna,
+    recentTransactions: summary.recentTransactions,
   })
 })
 

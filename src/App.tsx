@@ -294,7 +294,7 @@ export default function App() {
         // 15-second device rate limit cooldown
         setCooldownRemaining(15)
 
-        // Optimistically update
+        // Optimistically update explainers and topic community pool
         setExplainers(prev =>
           prev.map(e =>
             e.id === explainer.id
@@ -304,6 +304,14 @@ export default function App() {
                   backerCount: e.backerCount + 1,
                 }
               : e
+          )
+        )
+
+        setTopics(prev =>
+          prev.map(t =>
+            t.id === explainer.topicId
+              ? { ...t, rewardPoolLuna: (t.rewardPoolLuna || 0) + tierLuna }
+              : t
           )
         )
 
@@ -462,7 +470,7 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto bg-slate-950 text-slate-100 pb-24 selection:bg-amber-400 selection:text-slate-950">
       {/* Top App Header with Safe-Area support */}
-      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 pt-3 pb-2.5">
+      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 pt-safe pb-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🎓</span>
@@ -1463,7 +1471,7 @@ export default function App() {
       )}
 
       {/* Developer & Local-Testing Verification Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-4 py-2.5 text-[10px] text-slate-400 max-w-md mx-auto">
+      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-4 pt-2 pb-safe text-[10px] text-slate-400 max-w-md mx-auto">
         <div className="flex items-center justify-between font-mono">
           <span className="flex items-center gap-1 truncate">
             <Smartphone className="w-3 h-3 text-amber-400" />

@@ -224,4 +224,71 @@ export const store = {
       await supabase.from('payouts').insert(payout)
     }
   },
+
+  // 10. Get leaderboard
+  async getLeaderboard(): Promise<Array<{
+    id: string
+    teacher_name: string
+    payout_address: string
+    total_backed_luna: number
+    backer_count: number
+    rank: number
+  }>> {
+    const explainers = await this.getExplainers()
+    return explainers.map((exp, index) => ({
+      id: exp.id,
+      teacher_name: exp.teacher_name,
+      payout_address: exp.payout_address,
+      total_backed_luna: Number(exp.total_backed_luna) || 0,
+      backer_count: Number(exp.backer_count) || 0,
+      rank: index + 1,
+    }))
+  },
+
+  // 11. Get treasury summary
+  async getTreasurySummary(): Promise<{
+    totalTransactions: number
+    totalIndexedLuna: number
+    recentTransactions: TransactionRow[]
+  }> {
+    if (isSupabaseActive() && supabase) {
+      const { count: txCount } = await supabase
+        .from('transactions')
+        .select('*', { count: 'exact', head: true })
+      const { data: allTxs } = await supabase
+        .from('transactions')
+        .select('value_luna')
+        .eq('is_self_backed', 0)
+      const totalIndexedLuna = allTxs
+        ? allTxs.reduce((acc, t) => acc + (Number(t.value_luna) || 0), 0)
+        : 0
+      const { data: recentTxs } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .limit(20)
+
+      return {
+        totalTransactions: txCount || 0,
+        totalIndexedLuna,
+        recentTransactions: (recentTxs as TransactionRow[]) || [],
+      }
+    }
+
+    const txCount = (db.prepare('SELECT COUNT(*) as c FROM transactions').get() as { c: number }).c
+    const totalLuna = (
+      db
+        .prepare('SELECT COALESCE(SUM(value_luna), 0) as s FROM transactions WHERE is_self_backed = 0')
+        .get() as { s: number }
+    ).s
+    const recentTxs = db
+      .prepare('SELECT * FROM transactions ORDER BY timestamp DESC LIMIT 20')
+      .all() as TransactionRow[]
+
+    return {
+      totalTransactions: txCount,
+      totalIndexedLuna: totalLuna,
+      recentTransactions: recentTxs,
+    }
+  },
 }

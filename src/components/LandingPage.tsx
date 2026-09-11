@@ -25,7 +25,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto bg-slate-950 text-slate-100 selection:bg-amber-400 selection:text-slate-950">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 pt-safe pb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🎓</span>
           <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
@@ -313,7 +313,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* Final Call to Action */}
-      <section className="px-5 py-10 flex flex-col items-center text-center">
+      <section className="px-5 py-10 bg-gradient-to-b from-slate-900/50 to-slate-950 pb-safe text-center flex flex-col items-center">
         <h3 className="text-xl font-bold text-white mb-2">Ready to Prove What You Know?</h3>
         <p className="text-xs text-slate-400 max-w-xs mb-6">
           Explore current topics, review explainers from the community, or post your own breakdown to earn NIM.
