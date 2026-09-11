@@ -68,7 +68,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <p className="text-sm text-slate-300 leading-relaxed max-w-sm mb-7">
           Passive reading creates the illusion of competence. True mastery comes from explaining
           complex ideas in plain words. Teach concepts in 2 minutes, get peer-reviewed, and earn
-          from community reward pools.
+          direct micro-backing from learners who found your explanation useful.
         </p>
 
         {/* Primary Action Button */}
@@ -102,7 +102,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
           <div className="flex flex-col items-center">
             <span className="text-lg font-bold font-mono text-yellow-300">{totalPoolNim.toLocaleString()} NIM</span>
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Bounties</span>
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Community Pool</span>
           </div>
         </div>
       </section>
@@ -200,10 +200,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                <span>Proportional Reward Pools</span>
+                <span>Community Pool Highlights What's Useful</span>
               </h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                When a topic round ends, its reward pool splits across explainers proportional to the backing they received from the community.
+                No arbitrary prize pools. The community pool represents the real NIM backed by peers. Explanations with the most community support rise to the top as the most helpful.
               </p>
             </div>
           </div>
@@ -217,32 +217,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <Scale className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-amber-300">The Fair-Play Economic Rule</h3>
+            <h3 className="text-sm font-bold text-amber-300">100% Direct Community Backing</h3>
             <p className="text-xs text-amber-100/80 mt-1.5 leading-relaxed">
-              <strong className="text-amber-200">Backers receive no financial return.</strong> A backing transaction is a one-way contribution to the reward pool that functions as a tip plus a vote for clarity.
+              <strong className="text-amber-200">Backers receive no financial return.</strong> A backing transaction is a one-way micro-tip plus a vote for clarity.
             </p>
             <p className="text-[11px] text-amber-200/60 mt-1.5 leading-relaxed">
-              Only explainers compete for bounty rewards. This deliberate design eliminates speculative extraction, prevents securities framing, and keeps the incentives aligned purely with honest education.
+              100% of community-backed funds go straight to rewarding the teachers whose explanations made complex concepts click for learners.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Difficulty Tiers & Pools */}
+      {/* Difficulty Tiers & Topics */}
       <section className="px-5 py-9 flex flex-col gap-4">
         <div>
           <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
-            Bounty Structure
+            Learning Pathways
           </span>
-          <h2 className="text-xl font-bold text-white mt-1">Difficulty Tiers</h2>
-          <p className="text-xs text-slate-400 mt-1">Escalating rewards match technical complexity:</p>
+          <h2 className="text-xl font-bold text-white mt-1">18 Curated Topics</h2>
+          <p className="text-xs text-slate-400 mt-1">Structured across 6 technical progression tiers:</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2.5">
           <div className="p-3 rounded-xl bg-slate-900 border border-emerald-500/30">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] uppercase font-bold text-emerald-400">Simple</span>
-              <span className="font-mono text-xs font-bold text-white">50 NIM</span>
+              <span className="font-mono text-[10px] text-slate-400 font-semibold">3 Challenges</span>
             </div>
             <p className="text-[11px] text-slate-400">NIM basics & wallets</p>
           </div>
@@ -250,7 +250,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-3 rounded-xl bg-slate-900 border border-teal-500/30">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] uppercase font-bold text-teal-400">Easy</span>
-              <span className="font-mono text-xs font-bold text-white">100 NIM</span>
+              <span className="font-mono text-[10px] text-slate-400 font-semibold">3 Challenges</span>
             </div>
             <p className="text-[11px] text-slate-400">Browser nodes & staking</p>
           </div>
@@ -258,7 +258,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-3 rounded-xl bg-slate-900 border border-sky-500/30">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] uppercase font-bold text-sky-400">Medium</span>
-              <span className="font-mono text-xs font-bold text-white">150 NIM</span>
+              <span className="font-mono text-[10px] text-slate-400 font-semibold">3 Challenges</span>
             </div>
             <p className="text-[11px] text-slate-400">PoS & finality</p>
           </div>
@@ -266,7 +266,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-3 rounded-xl bg-slate-900 border border-amber-500/30">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] uppercase font-bold text-amber-400">Med-Hard</span>
-              <span className="font-mono text-xs font-bold text-white">250 NIM</span>
+              <span className="font-mono text-[10px] text-slate-400 font-semibold">3 Challenges</span>
             </div>
             <p className="text-[11px] text-slate-400">Blocks & slashing</p>
           </div>
@@ -274,7 +274,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-3 rounded-xl bg-slate-900 border border-orange-500/30">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] uppercase font-bold text-orange-400">Hard</span>
-              <span className="font-mono text-xs font-bold text-white">400 NIM</span>
+              <span className="font-mono text-[10px] text-slate-400 font-semibold">3 Challenges</span>
             </div>
             <p className="text-[11px] text-slate-400">Epochs & BFT voting</p>
           </div>
@@ -282,7 +282,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-3 rounded-xl bg-slate-900 border border-purple-500/30">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] uppercase font-bold text-purple-400">Expert</span>
-              <span className="font-mono text-xs font-bold text-white">600 NIM</span>
+              <span className="font-mono text-[10px] text-slate-400 font-semibold">3 Challenges</span>
             </div>
             <p className="text-[11px] text-slate-400">ZK-SNARKs & TPS trade-offs</p>
           </div>

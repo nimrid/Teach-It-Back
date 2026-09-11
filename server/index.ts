@@ -229,7 +229,7 @@ app.post('/api/admin/close-round', requireAdmin, async (req: Request, res: Respo
     let amount = 0
     if (totalTopicBacking > 0) {
       share = Number(exp.total_backed_luna) / totalTopicBacking
-      amount = Math.floor(topic.reward_pool_luna * share)
+      amount = Number(exp.total_backed_luna)
     }
 
     const simulatedHash = `payout_tx_${Date.now()}_${Math.random().toString(16).substring(2, 8)}`
@@ -257,7 +257,8 @@ app.post('/api/admin/close-round', requireAdmin, async (req: Request, res: Respo
 
   return res.json({
     message: `Round for topic "${topic.title}" closed successfully.`,
-    rewardPoolLuna: topic.reward_pool_luna,
+    communityPoolLuna: totalTopicBacking,
+    rewardPoolLuna: totalTopicBacking,
     totalBackingLuna: totalTopicBacking,
     payouts,
   })

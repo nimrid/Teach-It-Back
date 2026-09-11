@@ -1,23 +1,21 @@
 # Teach It Back 🎓⚡
 > **A Study-Accountability Mini App for Nimiq Pay (Nimiq Mini Apps Competition — Cycle III)**
 
-**Teach It Back** brings the Feynman Technique to Web3. Learners solidify their understanding of technical topics by producing short, crisp explainers (video/audio, blog/writeup, or direct formatted text). The community backs the clearest explainers with micro-payments in NIM.
+Learners solidify their understanding of technical topics by producing short, crisp explainers (video/audio, blog/writeup, or direct formatted text). The community backs the clearest explainers with micro-payments in NIM, creating a live Community Pool that highlights who explained the concept best.
 
-At the end of each round, the topic's reward pool splits proportionally across explainers based on the backing they earned. 
-
-> **Important Economic Design**: **Backers get no financial return.** Backing is a one-way contribution to the reward pool functioning as a tip and a vote. Only explainers earn rewards. This keeps the app legally clean, non-speculative, and community-driven.
+> **Important Economic Design**: **Backers get no financial return.** Backing is a one-way micro-tip and vote for clarity. The Community Pool reflects pure community appreciation and validation of useful explanations, and 100% of backed funds go directly to the teachers.
 
 ---
 
 ## ✨ Features & Capabilities
 
-- **18 Curated Topics Across 6 Difficulty Tiers**:
-  - 🟢 **Simple** (50 NIM Pool): Basics of NIM, Nimiq wallets, hardware-free consensus.
-  - 🔵 **Easy** (100 NIM Pool): In-browser nodes, staking basics, Nimiq Pay Mini Apps.
-  - 🟡 **Medium** (150 NIM Pool): Proof-of-Stake transition, validators vs. stakers, sub-second finality.
-  - 🟠 **Medium-hard** (250 NIM Pool): Micro vs. macro blocks, skip blocks, validator slashing.
-  - 🔴 **Hard** (400 NIM Pool): Albatross epochs & batches, 2-step macro voting, 3f+1 BFT guarantees.
-  - 🟣 **Expert** (600 NIM Pool): Election macro blocks, ZK-SNARKs (Groth16/Arkworks) epoch compression, high-TPS architectural trade-offs.
+- **18 Curated Topics Across 6 Learning Pathways**:
+  - 🟢 **Simple**: Basics of NIM, Nimiq wallets, hardware-free consensus.
+  - 🔵 **Easy**: In-browser nodes, staking basics, Nimiq Pay Mini Apps.
+  - 🟡 **Medium**: Proof-of-Stake transition, validators vs. stakers, sub-second finality.
+  - 🟠 **Medium-hard**: Micro vs. macro blocks, skip blocks, validator slashing.
+  - 🔴 **Hard**: Albatross epochs & batches, 2-step macro voting, 3f+1 BFT guarantees.
+  - 🟣 **Expert**: Election macro blocks, ZK-SNARKs (Groth16/Arkworks) epoch compression, high-TPS architectural trade-offs.
 
 - **Multi-Format Submissions**:
   - 🎬 **Video / Audio Link**: Direct links to YouTube, Loom, Vimeo, etc., with automatic embedded player.

@@ -108,6 +108,30 @@ export async function initSupabase(): Promise<boolean> {
       }))
       await supabase.from('topics').upsert(seedTopics)
       console.log('[Supabase] 18 curated questions seeded into Supabase.')
+    } else {
+      // Recalculate Supabase topics reward_pool_luna from actual explainers backing (cleans legacy seeded bounties)
+      try {
+        const { data: explainersData } = await supabase.from('explainers').select('topic_id, total_backed_luna')
+        const backingMap = new Map<string, number>()
+        if (explainersData) {
+          for (const exp of explainersData) {
+            const cur = backingMap.get(exp.topic_id) || 0
+            backingMap.set(exp.topic_id, cur + (Number(exp.total_backed_luna) || 0))
+          }
+        }
+
+        const { data: currentSupabaseTopics } = await supabase.from('topics').select('id, reward_pool_luna')
+        if (currentSupabaseTopics) {
+          for (const st of currentSupabaseTopics) {
+            const truePool = backingMap.get(st.id) || 0
+            if (st.reward_pool_luna !== truePool) {
+              await supabase.from('topics').update({ reward_pool_luna: truePool }).eq('id', st.id)
+            }
+          }
+        }
+      } catch (poolErr) {
+        console.warn('[Supabase] Could not recalculate topic pools:', poolErr)
+      }
     }
 
     return true

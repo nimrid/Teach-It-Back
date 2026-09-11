@@ -2,16 +2,24 @@ import { db, CURATED_TOPICS } from './db'
 import { supabase, isSupabaseActive, TopicRow, ExplainerRow, TransactionRow, PayoutRow } from './supabase'
 
 export const store = {
-  // 1. Get all topics
+  // 1. Get all topics with live community pool sums
   async getTopics(): Promise<TopicRow[]> {
     if (isSupabaseActive() && supabase) {
       const { data, error } = await supabase
         .from('topics')
         .select('*')
-        .order('reward_pool_luna', { ascending: true })
+        .order('reward_pool_luna', { ascending: false })
       if (!error && data) return data as TopicRow[]
     }
-    return db.prepare('SELECT * FROM topics').all() as TopicRow[]
+    return db.prepare(`
+      SELECT 
+        t.id, t.title, t.description, t.difficulty, t.round_status, t.round_end_timestamp,
+        COALESCE(SUM(e.total_backed_luna), 0) AS reward_pool_luna
+      FROM topics t
+      LEFT JOIN explainers e ON t.id = e.topic_id
+      GROUP BY t.id
+      ORDER BY reward_pool_luna DESC, t.id ASC
+    `).all() as TopicRow[]
   },
 
   // 2. Get single topic by ID
@@ -24,7 +32,15 @@ export const store = {
         .maybeSingle()
       if (!error && data) return data as TopicRow
     }
-    const row = db.prepare('SELECT * FROM topics WHERE id = ?').get(id)
+    const row = db.prepare(`
+      SELECT 
+        t.id, t.title, t.description, t.difficulty, t.round_status, t.round_end_timestamp,
+        COALESCE(SUM(e.total_backed_luna), 0) AS reward_pool_luna
+      FROM topics t
+      LEFT JOIN explainers e ON t.id = e.topic_id
+      WHERE t.id = ?
+      GROUP BY t.id
+    `).get(id)
     return (row as TopicRow) || null
   },
 
@@ -141,6 +157,12 @@ export const store = {
             backer_count = backer_count + 1
         WHERE id = ?
       `).run(tx.value_luna, tx.explainer_id)
+
+      db.prepare(`
+        UPDATE topics
+        SET reward_pool_luna = reward_pool_luna + ?
+        WHERE id = ?
+      `).run(tx.value_luna, tx.topic_id)
     }
 
     // Record in Supabase
@@ -158,6 +180,16 @@ export const store = {
               backer_count: Number(explainer.backer_count) + 1,
             })
             .eq('id', tx.explainer_id)
+        }
+
+        const topic = await this.getTopic(tx.topic_id)
+        if (topic) {
+          await supabase
+            .from('topics')
+            .update({
+              reward_pool_luna: Number(topic.reward_pool_luna) + tx.value_luna,
+            })
+            .eq('id', tx.topic_id)
         }
       }
     }

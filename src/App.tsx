@@ -243,9 +243,9 @@ export default function App() {
       }))
   }, [explainers])
 
-  // Total bounties available across all topics
+  // Total community pool backed across all topics
   const totalPoolNim = useMemo(() => {
-    return topics.reduce((acc, t) => acc + t.rewardPoolLuna / 100000, 0)
+    return topics.reduce((acc, t) => acc + (t.rewardPoolLuna || 0) / 100000, 0)
   }, [topics])
 
   // Backing Handler
@@ -454,7 +454,7 @@ export default function App() {
           }
         }}
         topicsCount={topics.length || 18}
-        totalPoolNim={totalPoolNim || 1550}
+        totalPoolNim={totalPoolNim}
       />
     )
   }
@@ -469,9 +469,6 @@ export default function App() {
             <div>
               <h1 className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
                 Teach It Back
-                <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 font-semibold border border-amber-500/30">
-                  NIM Mini App
-                </span>
               </h1>
               <p className="text-[11px] text-slate-400">Micro-Backing & Topic Accountability</p>
             </div>
@@ -668,7 +665,7 @@ export default function App() {
               </h2>
               {currentTopic && (
                 <span className="text-[11px] text-amber-400 font-medium font-mono">
-                  Pool: {lunaToNim(currentTopic.rewardPoolLuna)} NIM
+                  Community Pool: {lunaToNim(currentTopic.rewardPoolLuna)} NIM
                 </span>
               )}
             </div>
@@ -730,9 +727,14 @@ export default function App() {
                         >
                           {t.difficulty}
                         </span>
-                        <span className="text-[11px] font-mono text-amber-400 font-bold">
-                          {lunaToNim(t.rewardPoolLuna)} NIM
-                        </span>
+                        <div className="text-right">
+                          <span className="text-[11px] font-mono text-amber-400 font-bold block">
+                            {lunaToNim(t.rewardPoolLuna)} NIM
+                          </span>
+                          <span className="text-[9px] text-slate-400 block -mt-0.5 font-medium">
+                            Community Pool
+                          </span>
+                        </div>
                       </div>
                       <h3 className="font-bold text-xs text-white line-clamp-2 leading-snug">{t.title}</h3>
                     </div>
@@ -766,8 +768,10 @@ export default function App() {
               </div>
 
               <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-                <div className="text-[11px] text-slate-400">
-                  Explainers: <span className="text-slate-200 font-semibold">{currentExplainers.length}</span>
+                <div className="text-[11px] text-slate-400 flex items-center gap-2">
+                  <span>Explainers: <strong className="text-slate-200 font-semibold">{currentExplainers.length}</strong></span>
+                  <span>•</span>
+                  <span>Community Pool: <strong className="text-amber-400 font-mono font-semibold">{lunaToNim(currentTopic.rewardPoolLuna)} NIM</strong></span>
                 </div>
                 <button
                   onClick={() => {
@@ -809,168 +813,204 @@ export default function App() {
                 </button>
               </div>
             ) : (
-              currentExplainers.map(explainer => {
-                const isOwnExplainer = Boolean(
-                  currentAccount &&
-                  formatAddress(currentAccount) === formatAddress(explainer.payoutAddress)
-                )
+              (() => {
+                const topBackedLuna = Math.max(...currentExplainers.map(e => e.totalBackedLuna), 0)
+                const totalTopicPool = currentTopic ? currentTopic.rewardPoolLuna : 0
 
-                return (
-                  <div
-                    key={explainer.id}
-                    className="bg-slate-900 border border-slate-800/90 rounded-xl p-3.5 space-y-3 transition-all hover:border-slate-700"
-                  >
-                    {/* Explainer Header with Format Badge */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="font-bold text-sm text-white">{explainer.teacherName}</h4>
+                return currentExplainers.map(explainer => {
+                  const isOwnExplainer = Boolean(
+                    currentAccount &&
+                    formatAddress(currentAccount) === formatAddress(explainer.payoutAddress)
+                  )
+                  const isTopUseful = topBackedLuna > 0 && explainer.totalBackedLuna === topBackedLuna
+                  const sharePercent = totalTopicPool > 0 ? Math.round((explainer.totalBackedLuna / totalTopicPool) * 100) : 0
 
-                          {/* Content Format Pill */}
-                          <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center gap-1">
-                            {explainer.contentType === 'video' && <Video className="w-3 h-3 text-amber-400" />}
-                            {explainer.contentType === 'article' && <FileText className="w-3 h-3 text-sky-400" />}
-                            {explainer.contentType === 'text' && <PenTool className="w-3 h-3 text-emerald-400" />}
-                            <span>
-                              {explainer.contentType === 'video'
-                                ? 'Video/Audio'
-                                : explainer.contentType === 'article'
-                                ? 'Blog Post'
-                                : 'Written Note'}
+                  return (
+                    <div
+                      key={explainer.id}
+                      className={`bg-slate-900 border rounded-xl p-3.5 space-y-3 transition-all ${
+                        isTopUseful
+                          ? 'border-amber-500/50 shadow-sm shadow-amber-500/10'
+                          : 'border-slate-800/90 hover:border-slate-700'
+                      }`}
+                    >
+                      {/* Explainer Header with Format Badge */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="font-bold text-sm text-white">{explainer.teacherName}</h4>
+
+                            {isTopUseful && (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/50 flex items-center gap-1 shadow-xs">
+                                <span>🌟 Most Useful</span>
+                              </span>
+                            )}
+
+                            {/* Content Format Pill */}
+                            <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center gap-1">
+                              {explainer.contentType === 'video' && <Video className="w-3 h-3 text-amber-400" />}
+                              {explainer.contentType === 'article' && <FileText className="w-3 h-3 text-sky-400" />}
+                              {explainer.contentType === 'text' && <PenTool className="w-3 h-3 text-emerald-400" />}
+                              <span>
+                                {explainer.contentType === 'video'
+                                  ? 'Video/Audio'
+                                  : explainer.contentType === 'article'
+                                  ? 'Blog Post'
+                                  : 'Written Note'}
+                              </span>
                             </span>
-                          </span>
 
-                          {isOwnExplainer && (
-                            <span className="text-[10px] bg-slate-800 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-mono">
-                              Your Submission
-                            </span>
-                          )}
+                            {isOwnExplainer && (
+                              <span className="text-[10px] bg-slate-800 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-mono">
+                                Your Submission
+                              </span>
+                            )}
+                          </div>
+
+                          <p className="font-mono text-[10px] text-slate-400 mt-1">
+                            Payout: {shortenAddress(explainer.payoutAddress)}
+                          </p>
                         </div>
 
-                        <p className="font-mono text-[10px] text-slate-400 mt-1">
-                          Payout: {shortenAddress(explainer.payoutAddress)}
-                        </p>
+                        {/* Action Button: Watch / Read Article / Read Text */}
+                        <button
+                          onClick={() =>
+                            setActiveContent({
+                              type: explainer.contentType,
+                              title: `${explainer.teacherName}'s Explainer`,
+                              teacherName: explainer.teacherName,
+                              url: explainer.contentUrl || explainer.videoUrl,
+                              text: explainer.contentText,
+                              explainer,
+                            })
+                          }
+                          className={`min-h-[44px] px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shrink-0 border transition-colors ${
+                            explainer.contentType === 'video'
+                              ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
+                              : explainer.contentType === 'article'
+                              ? 'bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border-sky-500/30'
+                              : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                          }`}
+                        >
+                          {explainer.contentType === 'video' && <Play className="w-3.5 h-3.5 fill-current" />}
+                          {explainer.contentType === 'article' && <ExternalLink className="w-3.5 h-3.5" />}
+                          {explainer.contentType === 'text' && <BookOpen className="w-3.5 h-3.5" />}
+                          <span>
+                            {explainer.contentType === 'video'
+                              ? 'Watch'
+                              : explainer.contentType === 'article'
+                              ? 'Read Blog'
+                              : 'Read Text'}
+                          </span>
+                        </button>
                       </div>
 
-                      {/* Action Button: Watch / Read Article / Read Text */}
-                      <button
-                        onClick={() =>
-                          setActiveContent({
-                            type: explainer.contentType,
-                            title: `${explainer.teacherName}'s Explainer`,
-                            teacherName: explainer.teacherName,
-                            url: explainer.contentUrl || explainer.videoUrl,
-                            text: explainer.contentText,
-                            explainer,
-                          })
-                        }
-                        className={`min-h-[44px] px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shrink-0 border transition-colors ${
-                          explainer.contentType === 'video'
-                            ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
-                            : explainer.contentType === 'article'
-                            ? 'bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border-sky-500/30'
-                            : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                        }`}
-                      >
-                        {explainer.contentType === 'video' && <Play className="w-3.5 h-3.5 fill-current" />}
-                        {explainer.contentType === 'article' && <ExternalLink className="w-3.5 h-3.5" />}
-                        {explainer.contentType === 'text' && <BookOpen className="w-3.5 h-3.5" />}
-                        <span>
-                          {explainer.contentType === 'video'
-                            ? 'Watch'
-                            : explainer.contentType === 'article'
-                            ? 'Read Blog'
-                            : 'Read Text'}
-                        </span>
-                      </button>
-                    </div>
+                      {/* Direct Text Preview Snippet */}
+                      {explainer.contentType === 'text' && explainer.contentText && (
+                        <div
+                          onClick={() =>
+                            setActiveContent({
+                              type: explainer.contentType,
+                              title: `${explainer.teacherName}'s Explainer`,
+                              teacherName: explainer.teacherName,
+                              text: explainer.contentText,
+                              explainer,
+                            })
+                          }
+                          className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 text-xs text-slate-300 line-clamp-3 font-mono cursor-pointer hover:border-slate-700 transition-colors"
+                        >
+                          {explainer.contentText}
+                        </div>
+                      )}
 
-                    {/* Direct Text Preview Snippet */}
-                    {explainer.contentType === 'text' && explainer.contentText && (
-                      <div
-                        onClick={() =>
-                          setActiveContent({
-                            type: explainer.contentType,
-                            title: `${explainer.teacherName}'s Explainer`,
-                            teacherName: explainer.teacherName,
-                            text: explainer.contentText,
-                            explainer,
-                          })
-                        }
-                        className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 text-xs text-slate-300 line-clamp-3 font-mono cursor-pointer hover:border-slate-700 transition-colors"
-                      >
-                        {explainer.contentText}
+                      {/* Blog Post Preview Snippet */}
+                      {explainer.contentType === 'article' && explainer.contentUrl && (
+                        <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+                          <span className="truncate pr-2 font-mono text-sky-400">
+                            {explainer.contentUrl.replace(/^https?:\/\//, '')}
+                          </span>
+                          <ExternalLink className="w-3 h-3 shrink-0 text-slate-500" />
+                        </div>
+                      )}
+
+                      {/* Backing Summary Bar */}
+                      <div className="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/60 space-y-2 text-xs">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-[10px] text-slate-400 uppercase font-semibold">Community Backed</p>
+                            <p className="font-mono font-bold text-amber-400 text-sm">
+                              {lunaToNim(explainer.totalBackedLuna)} NIM
+                            </p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-[10px] text-slate-400 uppercase font-semibold">Backers</p>
+                            <p className="font-mono text-slate-200 text-sm font-medium">
+                              {explainer.backerCount}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] text-slate-400 uppercase font-semibold">Topic Share</p>
+                            <p className="font-mono text-emerald-400 text-sm font-semibold">
+                              {totalTopicPool > 0 ? `${sharePercent}%` : '0%'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {totalTopicPool > 0 && (
+                          <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                isTopUseful ? 'bg-amber-400' : 'bg-slate-600'
+                              }`}
+                              style={{ width: `${Math.max(sharePercent, 3)}%` }}
+                            />
+                          </div>
+                        )}
                       </div>
-                    )}
 
-                    {/* Blog Post Preview Snippet */}
-                    {explainer.contentType === 'article' && explainer.contentUrl && (
-                      <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
-                        <span className="truncate pr-2 font-mono text-sky-400">
-                          {explainer.contentUrl.replace(/^https?:\/\//, '')}
-                        </span>
-                        <ExternalLink className="w-3 h-3 shrink-0 text-slate-500" />
-                      </div>
-                    )}
-
-                    {/* Backing Summary Bar */}
-                    <div className="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/60 flex items-center justify-between text-xs">
+                      {/* Fixed Tier Backing Buttons (1 / 5 / 10 NIM) */}
                       <div>
-                        <p className="text-[10px] text-slate-400 uppercase font-semibold">Total Backed</p>
-                        <p className="font-mono font-bold text-amber-400 text-sm">
-                          {lunaToNim(explainer.totalBackedLuna)} NIM
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[10px] text-slate-400 uppercase font-semibold">Backers</p>
-                        <p className="font-mono text-slate-200 text-sm font-medium">
-                          {explainer.backerCount}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Fixed Tier Backing Buttons (1 / 5 / 10 NIM) */}
-                    <div>
-                      <p className="text-[11px] text-slate-400 font-medium mb-1.5 flex items-center justify-between">
-                        <span>Send 1-way tip:</span>
-                        {isOwnExplainer ? (
-                          <span className="text-[10px] text-rose-400 font-mono font-semibold">
-                            Self-backing blocked
-                          </span>
-                        ) : cooldownRemaining > 0 ? (
-                          <span className="text-[10px] text-amber-400 font-mono">
-                            Wait {cooldownRemaining}s
-                          </span>
-                        ) : null}
-                      </p>
-
-                      <div className="grid grid-cols-3 gap-2">
-                        {BACKING_TIERS.map(tier => (
-                          <button
-                            key={tier.nim}
-                            onClick={() => handleBackExplainer(explainer, tier.luna, tier.label)}
-                            disabled={
-                              isBacking === explainer.id ||
-                              isOwnExplainer ||
-                              cooldownRemaining > 0
-                            }
-                            className={`min-h-[44px] py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center justify-center ${
-                              isOwnExplainer || cooldownRemaining > 0
-                                ? 'bg-slate-800/40 text-slate-500 border border-slate-800 cursor-not-allowed'
-                                : 'bg-slate-800 hover:bg-amber-400 hover:text-slate-950 active:scale-95 border border-slate-700 text-slate-200'
-                            }`}
-                          >
-                            <span>{tier.label}</span>
-                            <span className="text-[9px] opacity-75 font-mono">
-                              ({tier.nim} NIM)
+                        <p className="text-[11px] text-slate-400 font-medium mb-1.5 flex items-center justify-between">
+                          <span>Back this explanation:</span>
+                          {isOwnExplainer ? (
+                            <span className="text-[10px] text-rose-400 font-mono font-semibold">
+                              Self-backing blocked
                             </span>
-                          </button>
-                        ))}
+                          ) : cooldownRemaining > 0 ? (
+                            <span className="text-[10px] text-amber-400 font-mono">
+                              Wait {cooldownRemaining}s
+                            </span>
+                          ) : null}
+                        </p>
+
+                        <div className="grid grid-cols-3 gap-2">
+                          {BACKING_TIERS.map(tier => (
+                            <button
+                              key={tier.nim}
+                              onClick={() => handleBackExplainer(explainer, tier.luna, tier.label)}
+                              disabled={
+                                isBacking === explainer.id ||
+                                isOwnExplainer ||
+                                cooldownRemaining > 0
+                              }
+                              className={`min-h-[44px] py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center justify-center ${
+                                isOwnExplainer || cooldownRemaining > 0
+                                  ? 'bg-slate-800/40 text-slate-500 border border-slate-800 cursor-not-allowed'
+                                  : 'bg-slate-800 hover:bg-amber-400 hover:text-slate-950 active:scale-95 border border-slate-700 text-slate-200'
+                              }`}
+                            >
+                              <span>{tier.label}</span>
+                              <span className="text-[9px] opacity-75 font-mono">
+                                ({tier.nim} NIM)
+                              </span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              })
+                  )
+                })
+              })()
             )}
           </div>
         </main>

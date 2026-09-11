@@ -12,142 +12,142 @@ export const db = new DatabaseSync(dbPath)
 
 // All 18 Curated Questions categorized by Difficulty
 export const CURATED_TOPICS = [
-  // 1. Simple (50 NIM Pool)
+  // 1. Simple
   {
     id: 'topic-simple-1',
     title: 'What is NIM and what can you do with it?',
     description: 'Explain the native currency of Nimiq, how it powers instant payments, and where it can be used.',
     difficulty: 'Simple',
-    rewardPoolLuna: 5_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-simple-2',
     title: "What's the difference between a Nimiq wallet and a regular bank account?",
     description: 'Explain self-custody, private keys, censorship resistance, and borderless transactions vs traditional banking.',
     difficulty: 'Simple',
-    rewardPoolLuna: 5_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-simple-3',
     title: "Why doesn't Nimiq need mining or expensive hardware?",
     description: 'Explain how Proof-of-Stake eliminated high electricity consumption and specialized ASIC mining rigs.',
     difficulty: 'Simple',
-    rewardPoolLuna: 5_000_000,
+    rewardPoolLuna: 0,
   },
 
-  // 2. Easy (100 NIM Pool)
+  // 2. Easy
   {
     id: 'topic-easy-1',
     title: "What does it mean that Nimiq runs 'directly in the browser'?",
     description: 'How Nimiq was built natively with JavaScript/WebAssembly and WebRTC to connect straight to the blockchain without middlemen.',
     difficulty: 'Easy',
-    rewardPoolLuna: 10_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-easy-2',
     title: 'What is staking, in plain terms — why would someone lock up their NIM?',
     description: 'Explain delegating stake to validators, earning protocol rewards, and securing network consensus.',
     difficulty: 'Easy',
-    rewardPoolLuna: 10_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-easy-3',
     title: "What's a Nimiq Pay Mini App, and how is it different from a normal app?",
     description: 'Explain WebViews with sandboxed provider injection (@nimiq/mini-app-sdk & window.ethereum) and zero private key exposure.',
     difficulty: 'Easy',
-    rewardPoolLuna: 10_000_000,
+    rewardPoolLuna: 0,
   },
 
-  // 3. Medium (150 NIM Pool)
+  // 3. Medium
   {
     id: 'topic-medium-1',
     title: 'What is Proof-of-Stake, and why did Nimiq move to it?',
     description: 'Trace the migration from PoW to Albatross PoS: dramatic speedups, energy efficiency, and validator economic incentives.',
     difficulty: 'Medium',
-    rewardPoolLuna: 15_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-medium-2',
     title: "What's the difference between a validator and a staker on Nimiq?",
     description: 'Distinguish between running node infrastructure/proposing blocks vs locking coins and delegating voting power.',
     difficulty: 'Medium',
-    rewardPoolLuna: 15_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-medium-3',
     title: 'Why can Nimiq confirm transactions in about a second?',
     description: 'Explain sub-second block production and optimistic consensus in the Albatross protocol.',
     difficulty: 'Medium',
-    rewardPoolLuna: 15_000_000,
+    rewardPoolLuna: 0,
   },
 
-  // 4. Medium-hard (250 NIM Pool)
+  // 4. Medium-hard
   {
     id: 'topic-medhard-1',
     title: "What are micro blocks vs macro blocks in Nimiq's Albatross protocol, and what does each one do?",
     description: 'Detail the distinction: rapid micro blocks for throughput and transactional payload vs macro blocks for epoch finality and checkpointing.',
     difficulty: 'Medium-hard',
-    rewardPoolLuna: 25_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-medhard-2',
     title: 'What happens when a validator fails to produce a block on time (skip blocks)?',
     description: 'Explain the timeout mechanism, skip block creation, and how the network maintains liveness without stalling.',
     difficulty: 'Medium-hard',
-    rewardPoolLuna: 25_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-medhard-3',
     title: 'What gets slashed if a validator misbehaves, and why do stakers share that risk?',
     description: 'Cover double-signing, fork production, slashing penalties, and why stakers must choose trustworthy validators.',
     difficulty: 'Medium-hard',
-    rewardPoolLuna: 25_000_000,
+    rewardPoolLuna: 0,
   },
 
-  // 5. Hard (400 NIM Pool)
+  // 5. Hard
   {
     id: 'topic-hard-1',
     title: 'What are epochs and batches in Albatross, and why does the protocol organize time this way?',
     description: 'Break down how batches and epochs structure validator rotation, reward distribution, and finality checkpoints.',
     difficulty: 'Hard',
-    rewardPoolLuna: 40_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-hard-2',
     title: 'Explain the two-step voting process for a macro block (Tendermint-based BFT) — what is each step for?',
     description: 'Detail the pre-vote and pre-commit phases, quorum thresholds, and how safety is guaranteed against equivocation.',
     difficulty: 'Hard',
-    rewardPoolLuna: 40_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-hard-3',
     title: 'What is the 3f+1 Byzantine fault tolerance assumption, and what does it actually guarantee?',
     description: 'Explain mathematical BFT limits: why the protocol tolerates up to one-third malicious validators and guarantees safety and liveness.',
     difficulty: 'Hard',
-    rewardPoolLuna: 40_000_000,
+    rewardPoolLuna: 0,
   },
 
-  // 6. Expert (600 NIM Pool)
+  // 6. Expert
   {
     id: 'topic-expert-1',
     title: 'How does an election macro block select the next validator set, and why does that matter for decentralization?',
     description: 'Explore the VRF / randomness generation, stake-weighted selection algorithm, and Sybil resistance in validator elections.',
     difficulty: 'Expert',
-    rewardPoolLuna: 60_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-expert-2',
     title: 'Explain how zero-knowledge proofs (Arkworks/Groth16) are used inside Albatross, and what problem they solve.',
     description: 'Analyze SNARKs for recursive epoch compression, enabling ultra-light mobile clients to verify consensus in milliseconds.',
     difficulty: 'Expert',
-    rewardPoolLuna: 60_000_000,
+    rewardPoolLuna: 0,
   },
   {
     id: 'topic-expert-3',
     title: "What's the actual trade-off Albatross makes to hit 1000+ TPS with sub-second finality that other PoS chains don't make?",
     description: 'Critique the architectural compromises: optimistic pipeline, validator set sizing, communication overhead, and state storage.',
     difficulty: 'Expert',
-    rewardPoolLuna: 60_000_000,
+    rewardPoolLuna: 0,
   },
 ]
 
@@ -223,15 +223,14 @@ export function initDatabase() {
     db.exec('UPDATE explainers SET content_url = video_url WHERE content_url IS NULL AND video_url IS NOT NULL')
   } catch {}
 
-  // Seed / Upsert the 18 Curated Questions
+  // Upsert the 18 Curated Questions without overwriting community-backed pool totals
   const upsertTopic = db.prepare(`
     INSERT INTO topics (id, title, description, difficulty, round_status, round_end_timestamp, reward_pool_luna)
-    VALUES (?, ?, ?, ?, 'open', ?, ?)
+    VALUES (?, ?, ?, ?, 'open', ?, 0)
     ON CONFLICT(id) DO UPDATE SET
       title = excluded.title,
       description = excluded.description,
-      difficulty = excluded.difficulty,
-      reward_pool_luna = excluded.reward_pool_luna
+      difficulty = excluded.difficulty
   `)
 
   for (const t of CURATED_TOPICS) {
@@ -240,9 +239,19 @@ export function initDatabase() {
       t.title,
       t.description,
       t.difficulty,
-      Date.now() + 1000 * 60 * 60 * 72, // 72 hours
-      t.rewardPoolLuna
+      Date.now() + 1000 * 60 * 60 * 72 // 72 hours
     )
   }
+
+  // Recalculate each topic's community pool from actual user backings (removes legacy pre-seeded bounties)
+  try {
+    db.exec(`
+      UPDATE topics SET reward_pool_luna = (
+        SELECT COALESCE(SUM(total_backed_luna), 0)
+        FROM explainers
+        WHERE explainers.topic_id = topics.id
+      )
+    `)
+  } catch {}
 }
 
