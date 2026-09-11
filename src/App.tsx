@@ -23,6 +23,7 @@ import {
   Video,
   PenTool
 } from 'lucide-react'
+import { LandingPage } from './components/LandingPage'
 
 // Derive API Base URL:
 // - If VITE_API_URL is set, use it.
@@ -79,6 +80,18 @@ export default function App() {
     fetchDeviceId,
     sendBackingTransaction,
   } = useNimiq()
+
+  // Navigation View: 'landing' (welcome & explanation) vs 'app' (interactive dashboard)
+  const [currentView, setCurrentView] = useState<'landing' | 'app'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('view') === 'landing') return 'landing'
+      if (params.get('view') === 'app') return 'app'
+      const hasVisited = localStorage.getItem('tib_has_visited')
+      if (hasVisited === 'true') return 'app'
+    }
+    return 'landing'
+  })
 
   const [activeTab, setActiveTab] = useState<'topics' | 'leaderboard' | 'treasury'>('topics')
   const [selectedTopicId, setSelectedTopicId] = useState<string>('topic-simple-1')
@@ -229,6 +242,11 @@ export default function App() {
         rank: index + 1,
       }))
   }, [explainers])
+
+  // Total bounties available across all topics
+  const totalPoolNim = useMemo(() => {
+    return topics.reduce((acc, t) => acc + t.rewardPoolLuna / 100000, 0)
+  }, [topics])
 
   // Backing Handler
   const handleBackExplainer = async (explainer: Explainer, tierLuna: number, tierLabel: string) => {
@@ -425,6 +443,22 @@ export default function App() {
     return null
   }
 
+  if (currentView === 'landing') {
+    return (
+      <LandingPage
+        onEnterApp={() => {
+          setCurrentView('app')
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('tib_has_visited', 'true')
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+        }}
+        topicsCount={topics.length || 18}
+        totalPoolNim={totalPoolNim || 1550}
+      />
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto bg-slate-950 text-slate-100 pb-24 selection:bg-amber-400 selection:text-slate-950">
       {/* Top App Header with Safe-Area support */}
@@ -444,6 +478,18 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setCurrentView('landing')
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              title="How It Works & Guide"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors text-xs font-medium border border-slate-700 active:scale-95"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              <span>Guide</span>
+            </button>
+
             <button
               onClick={refreshData}
               title="Sync latest tallies"
@@ -1383,7 +1429,15 @@ export default function App() {
             <Smartphone className="w-3 h-3 text-amber-400" />
             Treasury: {shortenAddress(treasuryAddress)}
           </span>
-          <span className="text-slate-500 font-sans">Nimiq Cycle III</span>
+          <button
+            onClick={() => {
+              setCurrentView('landing')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            className="text-amber-400 hover:text-amber-300 font-sans font-medium hover:underline flex items-center gap-1"
+          >
+            How it works
+          </button>
         </div>
       </footer>
     </div>
