@@ -1,10 +1,10 @@
 # Stage 1: Build Frontend and Server Dependencies
-FROM node:23-slim AS builder
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install pinned pnpm version matching lockfile
+RUN npm install -g pnpm@9.15.0
 
 # Copy package manifests
 COPY package.json pnpm-lock.yaml ./
@@ -19,14 +19,15 @@ COPY . .
 RUN pnpm build
 
 # Stage 2: Production Runner
-FROM node:23-slim AS runner
+FROM node:22-slim AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3001
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install pnpm for running the server script
+RUN npm install -g pnpm@9.15.0
 
 # Copy build artifacts and dependencies from builder
 COPY --from=builder /app/package.json ./package.json

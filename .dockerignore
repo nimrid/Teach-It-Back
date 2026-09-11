@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+data
+.env
+.env.*
+.git
+.agents
+skills-lock.json
+*.tsbuildinfo
+*.log
