@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: teach-it-back
+    runtime: node
+    plan: free
+    buildCommand: pnpm install && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NIMIQ_RPC_URL
+        value: https://rpc.testnet.nimiqwatch.com/
+      - key: TREASURY_ADDRESS
+        value: NQ80 TEAC H1TB ACK7 REAS URYT ESTN ETVA LADA
+      - key: ADMIN_API_KEY
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_JWKS_URL
+        sync: false
+

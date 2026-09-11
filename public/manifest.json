@@ -1,0 +1,19 @@
+{
+  "name": "Teach It Back",
+  "short_name": "TeachItBack",
+  "description": "Feynman-technique study-accountability Mini App for Nimiq Pay",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#E9B213",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

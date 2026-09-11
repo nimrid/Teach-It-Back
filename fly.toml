@@ -1,0 +1,21 @@
+app = "teach-it-back"
+primary_region = "fra"
+
+[build]
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+  NIMIQ_RPC_URL = "https://rpc.testnet.nimiqwatch.com/"
+  TREASURY_ADDRESS = "NQ80 TEAC H1TB ACK7 REAS URYT ESTN ETVA LADA"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+
+[mounts]
+  source = "tib_data"
+  destination = "/app/data"

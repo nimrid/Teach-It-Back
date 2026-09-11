@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="nimGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD440" />
+      <stop offset="100%" stop-color="#E9B213" />
+    </linearGradient>
+    <linearGradient id="darkBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Rect -->
+  <rect width="512" height="512" rx="112" fill="url(#darkBg)" />
+  <!-- Outer Gold Hexagon -->
+  <polygon points="256,64 420,160 420,352 256,448 92,352 92,160" fill="none" stroke="url(#nimGold)" stroke-width="20" stroke-linejoin="round" />
+  <!-- Core Mortarboard / Graduation Cap -->
+  <polygon points="256,168 396,236 256,304 116,236" fill="url(#nimGold)" />
+  <!-- Cap skull bottom -->
+  <path d="M166,262 L166,328 C166,356 346,356 346,328 L346,262" fill="none" stroke="url(#nimGold)" stroke-width="16" stroke-linecap="round" />
+  <!-- Tassel -->
+  <line x1="166" y1="262" x2="140" y2="308" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" />
+  <circle cx="140" cy="320" r="14" fill="#FFFFFF" />
+  <!-- Lightning Sparkle -->
+  <polygon points="266,220 246,252 260,252 246,280 276,242 260,242" fill="#0F172A" />
+</svg>
